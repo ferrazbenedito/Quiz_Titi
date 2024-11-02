@@ -25,7 +25,7 @@ def save_results(name, score):
         json.dump(data, file, indent=4)
 
 def main():
-    st.title("Taylor Swift Quiz")
+    st.title(r"Valen's Taylor Swift Quiz")
 
     # Name input
     name = st.text_input("Enter your name")
@@ -56,7 +56,13 @@ def main():
             "question": "Which of these movies did Taylor Swift appear in?",
             "options": ["Cats", "La La Land", "The Hunger Games", "Harry Potter"],
             "answer": "Cats"
+        },
+        {   
+            "question": "Which film did Taylor made a music for",
+            "options": ["Inside Out", "Minios 2", "Hannah Montana, The Film", "Shrek"],
+            "answer" : "Hannah Montana, The Film"
         }
+
     ]
 
     score = 0
