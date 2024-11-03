@@ -117,7 +117,7 @@ def main():
             save_results(name, score)
             st.success("Your result has been saved!")
 if st.button("Save Result"):
-    save_quiz_result(user_id, score)
+    save_quiz_result(name, score)
     st.success("Result saved!")
 
 # Button to display results
