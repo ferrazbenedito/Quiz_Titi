@@ -116,14 +116,14 @@ def main():
             # Save result to JSON file
             save_result(name, score)
             st.success("Your result has been saved!")
-if st.button("Save Result"):
-    save_quiz_result(name, score)
-    st.success("Result saved!")
-
-# Button to display results
-if st.button("Show All Results"):
-    results = get_all_results()
-    st.write(results)
+    if st.button("Save Result"):
+        save_quiz_result(name, score)
+        st.success("Result saved!")
+    
+    # Button to display results
+    if st.button("Show All Results"):
+        results = get_all_results()
+        st.write(results)
 
 if __name__ == "__main__":
     main()
