@@ -1,6 +1,35 @@
 import streamlit as st
 import json
 from datetime import datetime
+import os
+import psycopg2
+from psycopg2.extras import RealDictCursor
+
+# Get the DATABASE_URL from the environment
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+def get_db_connection():
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    return conn
+
+def get_all_results():
+    conn = get_db_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    cursor.execute("SELECT * FROM quiz_results ORDER BY timestamp DESC;")
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return results
+
+def save_quiz_result(user_id, score):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    query = "INSERT INTO quiz_results (user_id, score) VALUES (%s, %s);"
+    cursor.execute(query, (user_id, score))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
 
 def save_results(name, score):
     # Data to save
@@ -87,6 +116,14 @@ def main():
             # Save result to JSON file
             save_results(name, score)
             st.success("Your result has been saved!")
+if st.button("Save Result"):
+    save_quiz_result(user_id, score)
+    st.success("Result saved!")
+
+# Button to display results
+if st.button("Show All Results"):
+    results = get_all_results()
+    st.write(results)
 
 if __name__ == "__main__":
     main()
