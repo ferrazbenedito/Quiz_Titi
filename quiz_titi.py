@@ -57,8 +57,8 @@ def main():
     # Name input
     name = st.text_input("Enter your name")
 
-    # Quiz questions
-    questions = [
+    # First set of questions
+    questions_set1 = [
         {"question": "What is Taylor Swift's middle name?", "options": ["Alison", "Marie", "Elizabeth", "Anne"], "answer": "Alison"},
         {"question": "In which year was Taylor Swift born?", "options": ["1987", "1989", "1990", "1992"], "answer": "1989"},
         {"question": "What was the title of Taylor Swift's debut single?", "options": ["Love Story", "Tim McGraw", "Our Song", "Teardrops on My Guitar"], "answer": "Tim McGraw"},
@@ -67,30 +67,64 @@ def main():
         {"question": "Which film did Taylor make a song for?", "options": ["Inside Out", "Minions 2", "Hannah Montana: The Movie", "Shrek"], "answer": "Hannah Montana: The Movie"}
     ]
 
-    # Quiz logic
+    # Second set of questions
+    questions_set2 = [
+        {"question": "What instrument did Taylor Swift first learn to play?", "options": ["Piano", "Guitar", "Violin", "Drums"], "answer": "Guitar"},
+        {"question": "Which song earned Taylor her first Grammy award?", "options": ["You Belong With Me", "Love Story", "White Horse", "Fearless"], "answer": "White Horse"},
+        {"question": "What is the name of Taylor's 2017 album?", "options": ["Red", "1989", "Reputation", "Lover"], "answer": "Reputation"},
+        {"question": "Which song did Taylor Swift re-record in 2021?", "options": ["Love Story", "Shake It Off", "Delicate", "Bad Blood"], "answer": "Love Story"},
+        {"question": "Taylor Swift won Album of the Year Grammy for which album?", "options": ["Speak Now", "Red", "Folklore", "Lover"], "answer": "Folklore"},
+        {"question": "In which city was Taylor Swift born?", "options": ["Nashville", "New York", "Los Angeles", "Reading"], "answer": "Reading"},
+        {"question": "Which Taylor Swift music video features a wedding scene?", "options": ["Speak Now", "Mine", "Love Story", "You Belong With Me"], "answer": "Mine"},
+        {"question": "Which song is NOT on the 'Fearless' album?", "options": ["You Belong With Me", "Fifteen", "Red", "The Best Day"], "answer": "Red"},
+        {"question": "What color dress does Taylor Swift wear in the 'Begin Again' music video?", "options": ["Blue", "White", "Red", "Green"], "answer": "Red"},
+        {"question": "Which artist collaborated with Taylor on 'Everything Has Changed'?", "options": ["Ed Sheeran", "Justin Bieber", "Shawn Mendes", "Adele"], "answer": "Ed Sheeran"}
+    ]
+
+    # Quiz logic for first set of questions
     score = 0
-    for i, q in enumerate(questions):
+    for i, q in enumerate(questions_set1):
         st.subheader(f"Question {i + 1}")
-        user_answer = st.radio(q["question"], q["options"], key=f"question_{i}")
+        user_answer = st.radio(q["question"], q["options"], key=f"question1_{i}")
         
         # Check if the answer is correct
         if user_answer == q["answer"]:
             score += 1
 
-    # Submit button with scoring and saving
-    if st.button("Submit Quiz"):
+    # Display score and conditionally show second set of questions
+    if st.button("Submit First Set"):
         if name.strip() == "":
             st.error("Please enter your name before submitting.")
         else:
-            st.write(f"🎉 **{name}, your score is: {score}/{len(questions)}!** 🎉")
-            st.write("Thank you for playing! 🎸")
+            st.write(f"🎉 **{name}, your score for the first set is: {score}/{len(questions_set1)}!** 🎉")
+            if score >= 5:
+                st.write("Great job! You scored 5 or higher, so here's a bonus round! 🎉")
 
-            # Save the result to both the database and JSON file for demonstration
-            save_quiz_result_db(name, score)
-            save_results_file(name, score)
-            st.success("Your result has been saved!")
+                # Quiz logic for second set of questions
+                score_set2 = 0
+                for i, q in enumerate(questions_set2):
+                    st.subheader(f"Bonus Question {i + 1}")
+                    user_answer = st.radio(q["question"], q["options"], key=f"question2_{i}")
+                    
+                    # Check if the answer is correct
+                    if user_answer == q["answer"]:
+                        score_set2 += 1
 
-    # Display results
+                # Display score for the second set
+                if st.button("Submit Bonus Round"):
+                    total_score = score + score_set2
+                    st.write(f"🎉 **{name}, your total score is: {total_score}/{len(questions_set1) + len(questions_set2)}!** 🎉")
+                    st.write("Thank you for playing! 🎸")
+
+                    # Save result to database and JSON file
+                    save_quiz_result_db(name, total_score)
+                    save_results_file(name, total_score)
+                    st.success("Your result has been saved!")
+
+            else:
+                st.write("Good try! Score 5 or more to unlock the bonus round.")
+
+    # Display all results
     if st.button("Show All Results"):
         results = get_all_results()
         
