@@ -114,7 +114,7 @@ def main():
             st.write("Thanks for playing!")
             
             # Save result to JSON file
-            save_results(name, score)
+            save_quiz_result(name, score)
             st.success("Your result has been saved!")
 if st.button("Save Result"):
     save_quiz_result(name, score)
